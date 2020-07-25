@@ -46,15 +46,64 @@ struct ContentView: View {
 **참고**
 
 [SwiftUI 튜토리얼 1편 — 기본구조](https://medium.com/harrythegreat/swiftui-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC-1%ED%8E%B8-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0-11e7b589e6de)
-
-
 ## 2강
 
 - MVVM
+
   - Swift의 View는 struct이고 기본적으로 read only임. 그래서 정확히 코드대로 보일 것을 추측할 수 있음
   - View는 statelsess 이기 때문에 model의 상태에 따라 변경되어야함. model 의 변경에 따라 반응(react)하기 때문에 reactive programming
   - 모델은 UI independent 한 데이터나 로직 담음
   - VM은 뷰를 모델에 바인딩 하거나, 데이터를 다른 데이터 형식으로 변환하는 등  View 를 위한 작업들 함. 그리고  model의 변경사항을 알고 view가 바로 업데이트할 수 있게 도와주는 등 View와 Model 을 이어주는 역할. 여기서 주의할 점은 **ViewModel은 뷰와 직접 대화(talk)**하지 않음. 뷰에게 "모델 변경됐어!"하고 알려주지 않는단 말임 ㅇㅇ 그냥 "무언가 변경됐어!"하고 **변경사항을 게시(publish)** 할 뿐. 그럼 뷰가 구독(subscribe) 함.
   - 그럼 **모델을 바꾸려면** 어캄? **VM** 에 intent user 의 intent(의도) 를 처리하기 위한 responsibility를 하나 더 추가함 (**Process Intent**)
-- class는 ref 타입이라 heap 에 산다.  pointer로 전달되기 때문에 여러군데에서 해당하는 class를 참조하고 있을 수 있음
+
+- class & struct
+
+  - class
+
+    - reference 타입이라 heap 에 살고 있음.  
+
+    - argument로 class를 넘기면 pointer가 전달되기 때문에 여러군데에서 해당하는 class를 참조하고 있을 수 있음. 
+
+    - 그래서 몇군데서 참조하고 있는지 알 수 있게 자동으로 참조 카운트(automatically ref counted) 를 세고, 얘를 가르키는 애가 더이상 존재하지 않으면 힙에서 사라짐. 
+
+    - 객체 지향 프로그래밍 지원
+
+    - 언제나 변경 가능함(mutable). pointer 갖고 있기 때매 해당 heap 에 가서 변경 ㄱㄱ하면 되는 거
+
+      ```swift
+      class myClass {
+          var mutableProperty: Int = 0
+      }
+      
+      let classInstance = myClass()
+      classInstance.mutableProperty = 1 // 인스턴스는 let이지만, 안의 property는 변경 가능. 
+      
+      classInstance = myClass() // error : 다만 instance는 자체는 let이기 때문에 변경 불가
+      ```
+
+    - MVVM 에서 ViewModel 은 언제나 class. 왜냐면 다른 뷰에서도 공유되어야하니까 ㅇㅇ. UIKit도 class 베이스. 
+
+  - struct
+
+    - Value 타입
+
+    - argument로 넘기면 해당 값이 복사된 복사본이 넘어감. 실제 bitwise  copy 가 바로 일어나진 않고 않고 해당 값에 write 하려고 할때  ㄱㄱ 튼 핵심은 공유하지 않는다는거
+
+    - array, dic, int, bool 등 대부분은 struct
+
+    - 함수형 프로그래밍 지원
+
+    - 변경 가능성(mutability)을 명시적으로 let이냐 var이냐를 통해 언급해줘야함
+
+      ```swift 
+      struct myStruct {
+          var mutableProperty: Int = 0
+      }
+      
+      let structInstance = myStruct()
+      structInstance.mutableProperty = 1 // error : 인스턴스가 let이어서 안의 property도 변경 불가. 왜냐면 값 타입이라 property 변경되면 인스턴스 자체도 바뀜
+      ```
+
+    - 이 강의에서 볼 대부분의 것들은 struct (다만 View 는 protocol)
+
 
