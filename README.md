@@ -46,3 +46,15 @@ struct ContentView: View {
 **참고**
 
 [SwiftUI 튜토리얼 1편 — 기본구조](https://medium.com/harrythegreat/swiftui-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC-1%ED%8E%B8-%EA%B8%B0%EB%B3%B8%EA%B5%AC%EC%A1%B0-11e7b589e6de)
+
+
+## 2강
+
+- MVVM
+  - Swift의 View는 struct이고 기본적으로 read only임. 그래서 정확히 코드대로 보일 것을 추측할 수 있음
+  - View는 statelsess 이기 때문에 model의 상태에 따라 변경되어야함. model 의 변경에 따라 반응(react)하기 때문에 reactive programming
+  - 모델은 UI independent 한 데이터나 로직 담음
+  - VM은 뷰를 모델에 바인딩 하거나, 데이터를 다른 데이터 형식으로 변환하는 등  View 를 위한 작업들 함. 그리고  model의 변경사항을 알고 view가 바로 업데이트할 수 있게 도와주는 등 View와 Model 을 이어주는 역할. 여기서 주의할 점은 **ViewModel은 뷰와 직접 대화(talk)**하지 않음. 뷰에게 "모델 변경됐어!"하고 알려주지 않는단 말임 ㅇㅇ 그냥 "무언가 변경됐어!"하고 **변경사항을 게시(publish)** 할 뿐. 그럼 뷰가 구독(subscribe) 함.
+  - 그럼 **모델을 바꾸려면** 어캄? **VM** 에 intent user 의 intent(의도) 를 처리하기 위한 responsibility를 하나 더 추가함 (**Process Intent**)
+- class는 ref 타입이라 heap 에 산다.  pointer로 전달되기 때문에 여러군데에서 해당하는 class를 참조하고 있을 수 있음
+
